@@ -48,36 +48,37 @@ def fast_vline(x, y, height, color):
 # drawing primitive command.  The hline and vline parameters specify optional
 # optimized horizontal and vertical line drawing functions.  You can remove these
 # to see how much slower the filled shape functions perform!
-graphics = gfx.GFX(240, 320, display.pixel)
+graphics = gfx.GFX(240, 320, display.pixel, hline=fast_hline, vline=fast_vline)
 
 # Now loop forever drawing different primitives.
 # while True:
 # Clear screen and draw a red line.
-display.fill(0)
-time.sleep(0.01)
-graphics.line(0, 0, 239, 319, color565(255, 0, 0))
-time.sleep(2)
-# Clear screen and draw a green rectangle.
-display.fill(0)
-graphics.rect(0, 0, 120, 160, color565(0, 255, 0))
-time.sleep(2)
-# Clear screen and draw a filled green rectangle.
-display.fill(0)
-graphics.fill_rect(0, 0, 120, 160, color565(0, 255, 0))
-time.sleep(2)
-# Clear screen and draw a blue circle.
-display.fill(0)
-graphics.circle(120, 160, 60, color565(0, 0, 255))
-time.sleep(2)
-# Clear screen and draw a filled blue circle.
-display.fill(0)
-graphics.fill_circle(120, 160, 60, color565(0, 0, 255))
-time.sleep(2)
-# Clear screen and draw a pink triangle.
-display.fill(0)
-graphics.triangle(120, 100, 180, 160, 60, 160, color565(255, 0, 255))
-time.sleep(2)
-# Clear screen and draw a filled pink triangle.
-display.fill(0)
-graphics.fill_triangle(120, 100, 180, 160, 60, 160, color565(255, 0, 255))
-time.sleep(2)
+while True:
+    display.fill(0)
+    time.sleep(0.1)
+    graphics.line(0, 0, 239, 319, color565(255, 0, 0))
+    time.sleep(0.5)
+    # Clear screen and draw a green rectangle.
+    display.fill(0)
+    graphics.rect(0, 0, 120, 160, color565(0, 255, 0))
+    time.sleep(0.5)
+    # Clear screen and draw a filled green rectangle.
+    display.fill(0)
+    graphics.fill_rect(0, 0, 120, 160, color565(0, 255, 0))
+    time.sleep(0.5)
+    # Clear screen and draw a blue circle.
+    display.fill(0)
+    graphics.circle(120, 160, 60, color565(0, 0, 255))
+    time.sleep(0.5)
+    # Clear screen and draw a filled blue circle.
+    display.fill(0)
+    graphics.fill_circle(120, 160, 60, color565(0, 0, 255))
+    time.sleep(0.5)
+    # Clear screen and draw a pink triangle.
+    display.fill(0)
+    graphics.triangle(120, 100, 180, 160, 60, 160, color565(255, 0, 255))
+    time.sleep(0.5)
+    # Clear screen and draw a filled pink triangle.
+    display.fill(0)
+    graphics.fill_triangle(120, 100, 180, 160, 60, 160, color565(255, 0, 255))
+    time.sleep(0.5)

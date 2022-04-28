@@ -42,8 +42,15 @@ ERRBIT_CHECKSUM = 16  # Instruction packet checksum is incorrect.
 ERRBIT_OVERLOAD = 32  # The current load cannot be controlled by the set torque.
 ERRBIT_INSTRUCTION = 64  # Undefined instruction or delivering the action command without the reg_write command.
 
+import board
+from digitalio import DigitalInOut, Direction, Pull
 
 class Protocol1PacketHandler(object):
+    def __init__(self):
+        self.testpin = DigitalInOut(board.D4)
+        self.testpin.direction = Direction.OUTPUT
+        self.testpin.value = 0
+
     def getProtocolVersion(self):
         return 1.0
 
@@ -221,6 +228,7 @@ class Protocol1PacketHandler(object):
             return rxpacket, result, error
 
         # set packet timeout
+        self.testpin.value = 1
         if txpacket[PKT_INSTRUCTION] == INST_READ:
             port.setPacketTimeout(txpacket[PKT_PARAMETER0 + 1] + 6)
         else:
@@ -235,6 +243,7 @@ class Protocol1PacketHandler(object):
         if result == COMM_SUCCESS and txpacket[PKT_ID] == rxpacket[PKT_ID]:
             error = rxpacket[PKT_ERROR]
 
+        self.testpin.value = 0
         return rxpacket, result, error
 
     def ping(self, port, dxl_id):

@@ -4,6 +4,7 @@ import sys
 import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
+import time
 from dynamixel_sdk import *                 # Uses Dynamixel SDK library
 
 # Protocol version
@@ -14,6 +15,23 @@ DXL_ID                  = [17, 3, 5, 2, 4, 6, 7, 9, 11, 8, 10, 12]              
 BAUDRATE                = 1000000             # Dynamixel default baudrate : 57600
 #DEVICENAME              = '/dev/ttyUSB0'    # Check which port is being used on your controller
                                             # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0" Mac: "/dev/tty.usbserial-*"
+
+timetest = DigitalInOut(board.D4)
+timetest.direction = Direction.OUTPUT
+timetest.value = 0
+for dtime in [0.005, 0.010, 0.025, 0.050, 0.1, 0.5]:
+    ms = time.monotonic()
+    msns = time.monotonic_ns()
+    timetest.value = 1
+    time.sleep(dtime)
+    timetest.value = 0
+    me = time.monotonic()
+    mens = time.monotonic_ns()
+    print("SL: ", dtime, " MT: ", ms," ", me, " ", me-ms,
+        " MTNS: ", msns, " ", mens, " ", mens-msns, " ", int((mens-msns)/1000000))
+#quit()
+timetest.deinit()
+
 
 dxl_enable = DigitalInOut(board.D3)
 dxl_enable.direction = Direction.OUTPUT

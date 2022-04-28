@@ -93,17 +93,17 @@ class PortHandler(object):
         return self.ser.write(bpacket)
 
     def setPacketTimeout(self, packet_length):
-        self.packet_start_time = time.monotonic_ns() # self.getCurrentTime()
-        self.packet_timeout = (self.tx_time_per_byte * packet_length) + (LATENCY_TIMER * 2.0) + 2.0
+        self.packet_timeout = int((self.tx_time_per_byte * packet_length) + (LATENCY_TIMER * 2.0) + 2.0)
         print("setPacketTimeout: ", self.packet_timeout )
+        self.packet_start_time = time.monotonic_ns() # self.getCurrentTime()
 
     def setPacketTimeoutMillis(self, msec):
-        self.packet_start_time = time.monotonic_ns() #self.getCurrentTime()
         self.packet_timeout = msec
         print("setPacketTimeoutMillis: ", self.packet_timeout )
+        self.packet_start_time = time.monotonic_ns() #self.getCurrentTime()
 
     def isPacketTimeout(self):
-        delta_time = (time.monotonic_ns() - self.packet_start_time) / 1000000 #self.getTimeSinceStart()
+        delta_time = int((time.monotonic_ns() - self.packet_start_time) / 1000000) #self.getTimeSinceStart()
         print("dt: ", delta_time)
         if delta_time > self.packet_timeout:
             self.packet_timeout = 0
@@ -131,6 +131,7 @@ class PortHandler(object):
             baudrate=self.baudrate)
 
         self.is_open = True
+        self.ser.timeout = 0.01
 
         self.ser.reset_input_buffer()
 

@@ -81,7 +81,7 @@ class PortHandler(object):
     def readPort(self, length):
         if (sys.version_info > (3, 0)):
             rval = self.ser.read(length)
-            print(rval)
+            #print(rval)
             return rval
         else:
             return [ord(ch) for ch in self.ser.read(length)]
@@ -94,17 +94,17 @@ class PortHandler(object):
 
     def setPacketTimeout(self, packet_length):
         self.packet_timeout = int((self.tx_time_per_byte * packet_length) + (LATENCY_TIMER * 2.0) + 2.0)
-        print("setPacketTimeout: ", self.packet_timeout )
+        #print("setPacketTimeout: ", self.packet_timeout )
         self.packet_start_time = time.monotonic_ns() # self.getCurrentTime()
 
     def setPacketTimeoutMillis(self, msec):
         self.packet_timeout = msec
-        print("setPacketTimeoutMillis: ", self.packet_timeout )
+        #print("setPacketTimeoutMillis: ", self.packet_timeout )
         self.packet_start_time = time.monotonic_ns() #self.getCurrentTime()
 
     def isPacketTimeout(self):
         delta_time = int((time.monotonic_ns() - self.packet_start_time) / 1000000) #self.getTimeSinceStart()
-        print("dt: ", delta_time)
+        #print("dt: ", delta_time)
         if delta_time > self.packet_timeout:
             self.packet_timeout = 0
             return True

@@ -143,7 +143,9 @@ class Protocol1PacketHandler(object):
         wait_length = 6  # minimum length (HEADER0 HEADER1 ID LENGTH ERROR CHKSUM)
 
         while True:
-            rxpacket.extend(port.readPort(wait_length - rx_length))
+            rdata = port.readPort(wait_length - rx_length)
+            if (rdata != None):
+                rxpacket.extend(rdata)
             rx_length = len(rxpacket)
             if rx_length >= wait_length:
                 # find packet header

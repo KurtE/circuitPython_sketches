@@ -254,7 +254,9 @@ class Protocol2PacketHandler(object):
         wait_length = 11  # minimum length (HEADER0 HEADER1 HEADER2 RESERVED ID LENGTH_L LENGTH_H INST ERROR CRC16_L CRC16_H)
 
         while True:
-            rxpacket.extend(port.readPort(wait_length - rx_length))
+            rdata = port.readPort(wait_length - rx_length)
+            if (rdata != None):
+                rxpacket.extend(rdata)
             rx_length = len(rxpacket)
             if rx_length >= wait_length:
                 # find packet header

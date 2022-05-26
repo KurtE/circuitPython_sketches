@@ -4,18 +4,41 @@ import busio
 import supervisor
 from digitalio import DigitalInOut, Direction, Pull
 
-import neopixel
+if hasattr(board, 'NEOPIXEL'): 
+    import neopixel
 
-led_colors = [
-    (255, 0, 0),
-    (0, 255, 0),
-    (0, 0, 255),
-    (255, 255, 0),
-    (255, 0, 255),
-    (0, 255, 255),
-    (255, 255, 255),
-    (0, 0, 0),
-]
+    led_colors = [
+        (255, 0, 0),
+        (0, 255, 0),
+        (0, 0, 255),
+        (255, 255, 0),
+        (255, 0, 255),
+        (0, 255, 255),
+        (255, 255, 255),
+        (0, 0, 0),
+    ]
+    color_index = 0
+    led = neopixel.NeoPixel(board.NEOPIXEL, 1)
+    led.brightness = 0.3
+elif hasattr(board, 'APA102_SCK'): 
+    import adafruit_dotstar as dotstar
+    led = dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1, brightness=0.3)
+    led_colors = [
+        (255, 0, 0),
+        (0, 255, 0),
+        (0, 0, 255),
+        (255, 255, 0),
+        (255, 0, 255),
+        (0, 255, 255),
+        (255, 255, 255),
+        (0, 0, 0),
+    ]
+    color_index = 0
+else:
+    led = DigitalInOut(board.LED)
+    led.direction = Direction.OUTPUT
+    led_colors = None
+
 color_index = 0
 check_pin = DigitalInOut(board.IO4)
 check_pin.direction = Direction.INPUT
@@ -23,10 +46,7 @@ check_pin.pull = Pull.DOWN
 uart1 = None
 uart2 = None
 
-led = neopixel.NeoPixel(board.NEOPIXEL, 1)
-
-led.brightness = 0.3
-
+last_check_value = check_pin.value
 last_check_value = check_pin.value
 
 def CheckAndEchoUart(index, uart):
@@ -59,9 +79,15 @@ while True:
 
         CheckAndEchoUart(1, uart1)
         CheckAndEchoUart(2, uart2)
-    # cycle colors
-    led[0] = led_colors[color_index]
-    color_index += 1
-    if color_index >= len(led_colors):
-        color_index = 0
+
+    if led_colors != None:
+        led[0] = led_colors[color_index]
+        color_index += 1
+        if color_index >= len(led_colors):
+            color_index = 0
+    else:
+        if led.value:
+            led.value = False
+        else:    
+            led.value = True
     time.sleep(0.5)
